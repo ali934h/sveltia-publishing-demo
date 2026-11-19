@@ -1,0 +1,26 @@
+---
+const { title, language = 'en' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+<!doctype html>
+<html lang={language} dir={language === 'fa' ? 'rtl' : 'ltr'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <nav dir="ltr" aria-label="Navigation"><a href={base}>Articles</a><a href={base + 'admin/'}>Editor</a></nav>
+    <main><slot /></main>
+  </body>
+</html>
+<style is:global>
+  body { max-width: 42rem; margin: auto; padding: 1.5rem; background: #fafafa; color: #192524; font: 1rem/1.75 system-ui, sans-serif; }
+  nav { display: flex; gap: 1.5rem; border-bottom: 1px solid #d7dfdd; padding-bottom: 1rem; margin-bottom: 2rem; }
+  a { color: #056459; }
+  h1, h2 { line-height: 1.25; }
+  img { display: block; max-width: 100%; height: auto; }
+  .entry { margin-block: 1.5rem; }
+  .summary { color: #4c5a58; }
+</style>

@@ -1,0 +1,28 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  return (await getCollection('articles')).map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+const videos = [
+  { label: 'Aparat', url: data.aparat },
+  { label: 'YouTube', url: data.youtube }
+].filter(({ url }) => url?.startsWith('https://'));
+---
+<Layout title={data.title} language={data.language}>
+  <article>
+    <h1>{data.title}</h1>
+    <p class="summary">{data.description}</p>
+    {data.cover && <img src={data.cover} alt="" />}
+    <Content />
+    {videos.length > 0 && <ul>{videos.map(({ label, url }) => <li><a href={url}>{label}</a></li>)}</ul>}
+  </article>
+</Layout>
