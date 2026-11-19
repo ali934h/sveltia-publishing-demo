@@ -5,6 +5,7 @@ backend:
   auth_methods: [token]
 
 site_url: https://ali934h.github.io/sveltia-publishing-demo/
+display_url: https://ali934h.github.io/sveltia-publishing-demo/
 publish_mode: preview
 media_folder: public/uploads
 public_folder: /sveltia-publishing-demo/uploads
@@ -15,7 +16,7 @@ collections:
     label_singular: Article
     folder: src/content/articles
     create: true
-    preview_path: articles/{{slug}}/
+    preview_path: /sveltia-publishing-demo/articles/{{slug}}/
     fields:
       - { name: title, label: Title, widget: string }
       - name: language
