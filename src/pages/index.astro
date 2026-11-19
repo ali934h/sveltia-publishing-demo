@@ -4,13 +4,31 @@ import Layout from '../layouts/Layout.astro';
 
 const articles = (await getCollection('articles')).sort((a, b) => a.id.localeCompare(b.id));
 const base = import.meta.env.BASE_URL;
+const languageNames = { fa: 'فارسی', en: 'English', ru: 'Русский' };
 ---
-<Layout title="Article publishing demo">
-  <h1>Articles</h1>
-  {articles.map(({ id, data }) => (
-    <article class="entry" lang={data.language} dir={data.language === 'fa' ? 'rtl' : 'ltr'}>
-      <h2><a href={base + 'articles/' + encodeURIComponent(id) + '/'}>{data.title}</a></h2>
-      <p class="summary">{data.description}</p>
-    </article>
-  ))}
+<Layout title="Articles | Dr. Zahra Zabihi">
+  <section class="border-b border-line bg-blush">
+    <div class="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-20">
+      <h1 class="font-display text-6xl leading-none tracking-tight text-plum sm:text-8xl">Articles</h1>
+      <p class="mt-5 max-w-md text-lg leading-relaxed text-muted">A multilingual reading library.</p>
+    </div>
+  </section>
+  <section aria-label="Published articles" class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
+    {articles.length ? (
+      <ul class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {articles.map(({ id, data }) => (
+          <li>
+            <a href={base + 'articles/' + encodeURIComponent(id) + '/'} lang={data.language} dir={data.language === 'fa' ? 'rtl' : 'ltr'}
+              class="group flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-white font-sans transition-colors hover:border-plum/50">
+              <div class="flex h-full flex-col px-6 py-6 sm:px-7">
+                <span class="self-start rounded-full bg-blush px-3 py-1 text-sm font-medium text-plum">{languageNames[data.language]}</span>
+                <h2 class="mt-5 font-display text-3xl leading-tight text-ink group-hover:text-plum">{data.title}</h2>
+                <p class="mt-3 leading-relaxed text-muted">{data.description}</p>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : <p class="text-muted">No articles have been published yet.</p>}
+  </section>
 </Layout>

@@ -12,17 +12,41 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { data } = entry;
 const { Content } = await render(entry);
+const base = import.meta.env.BASE_URL;
+const labels = {
+  en: { all: 'All articles', video: 'Watch the video' },
+  fa: { all: 'همهٔ مقاله‌ها', video: 'تماشای ویدیو' },
+  ru: { all: 'Все статьи', video: 'Смотреть видео' },
+}[data.language];
 const videos = [
   { label: 'Aparat', url: data.aparat },
-  { label: 'YouTube', url: data.youtube }
+  { label: 'YouTube', url: data.youtube },
 ].filter(({ url }) => url?.startsWith('https://'));
 ---
-<Layout title={data.title} language={data.language}>
+<Layout title={data.title + ' | Dr. Zahra Zabihi'} language={data.language}>
   <article>
-    <h1>{data.title}</h1>
-    <p class="summary">{data.description}</p>
-    {data.cover && <img src={data.cover} alt="" />}
-    <Content />
-    {videos.length > 0 && <ul>{videos.map(({ label, url }) => <li><a href={url}>{label}</a></li>)}</ul>}
+    <header class="border-b border-line bg-blush">
+      <div class="mx-auto max-w-4xl px-5 py-10 sm:px-8 sm:py-16">
+        <a href={base} class="inline-block rounded-full border border-plum/20 bg-white/50 px-4 py-2 text-sm font-medium text-plum transition-colors hover:bg-white">{labels.all}</a>
+        <h1 class="mt-7 font-display text-[clamp(2.5rem,7vw,4.5rem)] leading-[1.22] font-bold text-ink [overflow-wrap:anywhere]">{data.title}</h1>
+        <p class="mt-5 max-w-[65ch] text-lg leading-relaxed text-muted sm:text-xl">{data.description}</p>
+      </div>
+    </header>
+    <div class="mx-auto max-w-3xl px-5 py-10 sm:px-8 sm:py-14">
+      {data.cover && (
+        <figure class="mb-10 overflow-hidden rounded-3xl border border-line bg-white p-5 sm:p-7">
+          <img src={data.cover} alt="" class="mx-auto max-h-[28rem] w-auto max-w-full object-contain" />
+        </figure>
+      )}
+      <div class="article-body"><Content /></div>
+      {videos.length > 0 && (
+        <section class="mt-12 rounded-3xl border border-line bg-white p-6" aria-label={labels.video}>
+          <h2 class="font-display text-2xl font-bold">{labels.video}</h2>
+          <ul class="mt-4 flex flex-wrap gap-3">
+            {videos.map(({ label, url }) => <li><a href={url} class="inline-block rounded-full bg-blush px-4 py-2 text-sm font-medium text-plum transition-colors hover:bg-plum hover:text-white">{label}</a></li>)}
+          </ul>
+        </section>
+      )}
+    </div>
   </article>
 </Layout>
